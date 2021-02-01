@@ -4,7 +4,11 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  mode: 'production',
+
+  output: {
+    filename: 'main.abc.js'
+  },
   optimization: {
     minimizer: [
       new OptimizeCssAssetsPlugin()
@@ -19,19 +23,6 @@ module.exports = {
           attributes: false,
           minimize: false
         }
-      },
-       
-      {
-        test: /\.(jpg|png|svg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              esModule: false,
-	            name: 'assets/[name].[ext]'	
-            }
-          }
-        ]
       },
 
       {
@@ -49,6 +40,18 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           'css-loader'
         ]
+      }, 
+
+      {
+        test: /\.(png|jpg|svg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              esModule: false
+            }
+          }
+        ]
       }
     ]
   },
@@ -62,11 +65,12 @@ module.exports = {
       filename: '[name].css',
       ignoreOrder: false
     }),
-    new CopyPlugin([
+    new CopyPlugin(
       {
-        from: 'src/assets', to: 'assets/'
+        patterns: [
+         { from: 'src/assets/', to: 'assets/'}
+        ]
       }
-    ]),
-  ]
-  
+    )
+  ]  
 };
