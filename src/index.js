@@ -1,4 +1,6 @@
 import {saludar} from './js/componentes.js';
 import './styles.css';
 
-saludar('Luis')
+const nombre = 'Luis';
+
+saludar(nombre)

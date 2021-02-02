@@ -5,9 +5,8 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-
   output: {
-    filename: 'main.abc.js'
+    filename: 'main.[contentHash].js'
   },
   optimization: {
     minimizer: [
@@ -23,6 +22,19 @@ module.exports = {
           attributes: false,
           minimize: false
         }
+      },
+       
+      {
+        test: /\.(jpg|png|svg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              esModule: false,
+	            name: 'assets/[name].[ext]'	
+            }
+          }
+        ]
       },
 
       {
@@ -40,18 +52,6 @@ module.exports = {
           MiniCssExtractPlugin.loader,
           'css-loader'
         ]
-      }, 
-
-      {
-        test: /\.(png|jpg|svg|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              esModule: false
-            }
-          }
-        ]
       }
     ]
   },
@@ -62,15 +62,14 @@ module.exports = {
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].css',
+      filename: '[name].[contentHash].css',
       ignoreOrder: false
     }),
-    new CopyPlugin(
+    new CopyPlugin([
       {
-        patterns: [
-         { from: 'src/assets/', to: 'assets/'}
-        ]
+        from: 'src/assets', to: 'assets/'
       }
-    )
-  ]  
+    ]),
+  ]
+  
 };
